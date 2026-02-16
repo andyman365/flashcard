@@ -141,7 +141,7 @@ body {
     color: white;
     cursor: pointer;
     transition: 0.2s;
-    
+
 }
 
 .next-btn:hover {
@@ -178,12 +178,33 @@ body {
 /* ---------- FLASHCARDS ---------- */
 
 const flashcards = [
-    { begrip: "Planeet", betekenis: "Een grote bol die rond een ster draait." },
-    { begrip: "Fotosynthese", betekenis: "Proces waarbij planten zonlicht gebruiken om voedsel te maken." },
-    { begrip: "Zoogdier", betekenis: "Dier dat melk drinkt bij de moeder." },
-    { begrip: "Verdampen", betekenis: "Wanneer water verandert in damp." }
+    { begrip: "Grondwet", betekenis: "Het belangrijkste wetboek van een land, waarin de rechten van burgers en de spelregels voor de overheid staan." },
+    { begrip: "Trias politica", betekenis: "Scheiding der machten: wetgevende, uitvoerende en rechtsprekende macht zijn gescheiden om machtsmisbruik te voorkomen." },
+    { begrip: "Kabinet", betekenis: "Alle ministers en staatssecretarissen samen; zij voeren het regeringsbeleid uit." },
+    { begrip: "Minister-president", betekenis: "De leider van het kabinet en 'voorzitter' van de ministerraad, ook wel premier genoemd." },
+    { begrip: "Ministerraad", betekenis: "Vergadering van alle ministers onder leiding van de premier; hier worden belangrijke besluiten genomen." },
+    { begrip: "Demissionair kabinet", betekenis: "Een kabinet dat na een val van de regering of verkiezingen alléén lopende zaken afhandelt." },
+    { begrip: "Tweede Kamer", betekenis: "Volksvertegenwoordiging gekozen door burgers (direct); heeft recht om wetten te maken en de regering te controleren." },
+    { begrip: "Eerste Kamer", betekenis: "Kamer van 'heroverweging'; beoordeelt wetten op uitvoerbaarheid en rechtmatigheid, maar mag geen wetsvoorstellen indienen." },
+    { begrip: "Staten-Generaal", betekenis: "Gezamenlijke naam voor de Eerste en Tweede Kamer." },
+    { begrip: "Fractie", betekenis: "Alle Kamerleden van dezelfde politieke partij samen." },
+    { begrip: "Fractiediscipline", betekenis: "Afspraken binnen een fractie om hetzelfde stemgedrag te vertonen." },
+    { begrip: "Coalitie", betekenis: "Samenwerking van meerdere partijen om een regering te vormen." },
+    { begrip: "Oppositie", betekenis: "Partijen die niet meeregeren, maar de regering kritisch volgen." },
+    { begrip: "Regeerakkoord", betekenis: "Het contract met plannen en afspraken van partijen die samen een kabinet vormen." },
+    { begrip: "Rijksbegroting", betekenis: "Overzicht van inkomsten en uitgaven van de overheid voor het komende jaar." },
+    { begrip: "Algemene Beschouwingen", betekenis: "Groot politiek debat over de plannen van het kabinet, na Prinsjesdag." },
+    { begrip: "Motie van wantrouwen", betekenis: "Uitspraak van de Tweede Kamer dat zij een minister of het kabinet niet meer vertrouwt." },
+    { begrip: "Motie van treurnis", betekenis: "Kritische uitspraak van onvrede, minder zwaar dan een motie van wantrouwen." },
+    { begrip: "Parlementaire enquête", betekenis: "Groot onderzoek door de Tweede Kamer naar het functioneren van bestuur of beleid." },
+    { begrip: "Miljoenennota", betekenis: "Toelichting bij de Rijksbegroting, gepresenteerd op Prinsjesdag." },
+    { begrip: "Prinsjesdag", betekenis: "Jaarlijks moment waarop de koning de troonrede voorleest en de begroting wordt aangeboden. Altijd op de derde dinsdag van september." },
+    { begrip: "Raad van State", betekenis: "Adviesorgaan over wetsvoorstellen en hoogste bestuursrechter in Nederland." },
+    { begrip: "Provinciale Staten", betekenis: "Provinciale volksvertegenwoordiging, kiest onder andere de Eerste Kamer (kiezer kiest 1e Kamer indirect)."},
+    { begrip: "Gemeenteraad", betekenis: "Het lokale volksvertegenwoordigend orgaan van een gemeente." },
+    { begrip: "College van B&W", betekenis: "Het dagelijks bestuur van de gemeente (burgemeester en wethouders)."}
 ];
-
+ 
 let currentIndex = -1;
 
 function randomIndex() {
