@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Toetsmodus - Flashcards</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+    --bg: #f6f7fb;
+    --card: #ffffff;        /* container achtergrond */
+    --header: #ffcc66;
+    --text: #1f2937;        /* donkere tekst in light mode */
+    --button: #2563eb;
+    --button-text: white;
+    --answer-bg: #334155;   /* knoppen */
+    --answer-text: white;
+    --correct: #16a34a;
+    --wrong: #dc2626;
+}
+
+body.dark {
+    --bg: #0f172a;
+    --card: #1e293b;        /* container achtergrond in dark mode */
+    --header: #ffb84d;
+    --text: #f2f2f2;        /* lichte tekst in dark mode */
+    --button: #3b82f6;
+    --button-text: white;
+    --answer-bg: #334155;
+    --answer-text: white;
+    --correct: #16a34a;
+    --wrong: #dc2626;
+}
+
+/* body en container */
+body {
+    margin: 0;
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    transition: 0.3s;
+}
+
+/* ---------- HEADER ---------- */
+.header {
+    background: var(--header);
+    padding: 15px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+/* Header items layout: flex container */
+.header-left { font-weight: 700; font-size: 20px; }
+.header-center { position: absolute; left: 50%; transform: translateX(-50%); }
+.header-right button {
+    margin-left: 10px;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+/* ---------- CONTAINER ---------- */
+.container {
+    max-width: 600px;
+    margin: 40px auto;
+    background: var(--card);   /* <-- verander naar variabele */
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.3);
+    color: var(--text);        /* tekstkleur volgen variabele */
+}
+
+/* ---------- TOETS ---------- */
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.question {
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+.answers button {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 10px;
+    border: none;
+    border-radius: 8px;
+    background: var(--answer-bg); /* achtergrondknop via variabele */
+    color: var(--answer-text);    /* tekstkleur via variabele */
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.answers button:hover {
+    filter: brightness(0.9);
+}
+.correct { background-color: var(--correct) !important; color: white; }
+.wrong { background-color: var(--wrong) !important; color: white; }
+
+.next-btn {
+    margin-top: 15px;
+    padding: 10px;
+    width: 100%;
+    border-radius: 8px;
+    border: none;
+    background: var(--button);
+    color: white;
+    cursor: pointer;
+}
+.next-btn:hover { background: #1d4ed8; }
+
+.score { margin-top: 15px; font-size: 18px; text-align: center; }
+
+.flashcard-btn {
+    font-size: 18px;          /* groter lettertype */
+    padding: 12px 28px;       /* grotere knop */
+    border-radius: 16px;      /* ronde hoeken */
+    border: none;
+    background: #2563eb;      /* moderne blauwe kleur */
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2); /* lichte schaduw */
+    transition: 0.2s;
+}
+
+.flashcard-btn:hover {
+    background: #1d4ed8;      /* donkerder blauw bij hover */
+    transform: translateY(-2px);
+}
+.coming-soon {
+    text-align: center;
+    font-size: 36px;
+    color: var(--text);
+    opacity: 0.6;
+    margin: 15px 0 25px 0;
+    font-style: italic;
+    transition: 0.3s;
+}
+body.dark .coming-soon {
+    color: #ccc; /* lichtere tekst in dark mode */
+}
+</style>
+</head>
+<body>
+
+<!-- ---------- HEADER ---------- -->
+<div class="header">
+    <div class="header-left">Toetsmodus</div>
+    <div class="header-center">
+        <button class="flashcard-btn" onclick="goToFlashcards()">📚 Ga terug naar Flashcards</button>
+    </div>
+    <div class="header-right">
+        <button onclick="toggleTheme()">🌙 / ☀️</button>
+    </div>
+</div>
+
+<!-- ---------- CONTAINER ---------- -->
+<div class="container">
+    <div class="question" id="question"></div>
+    <div class="answers" id="answers"></div>
+    <button class="next-btn" onclick="nextQuestion()">Volgende vraag</button>
+    <div class="score">Score: <span id="score">0</span></div>
+</div>
+<!-- Coming soon tekst -->
+<div class="coming-soon">
+    Coming soon: keeping score and leaderboard
+</div>
+
+
+<script>
+/* ---------- FLASHCARDS ---------- */
+const flashcards = [
+    { begrip: "Grondwet", betekenis: "Het belangrijkste wetboek van een land, waarin de rechten van burgers en de spelregels voor de overheid staan." },
+    { begrip: "Trias politica", betekenis: "Scheiding der machten: wetgevende, uitvoerende en rechtsprekende macht zijn gescheiden om machtsmisbruik te voorkomen." },
+    { begrip: "Kabinet", betekenis: "Alle ministers en staatssecretarissen samen; zij voeren het regeringsbeleid uit." },
+    { begrip: "Minister-president", betekenis: "De leider van het kabinet en voorzitter van de ministerraad, ook wel premier genoemd." },
+    { begrip: "Ministerraad", betekenis: "Vergadering van alle ministers onder leiding van de premier; hier worden belangrijke besluiten genomen." },
+    { begrip: "Demissionair kabinet", betekenis: "Een kabinet dat na een val van de regering of verkiezingen alléén lopende zaken afhandelt." },
+    { begrip: "Tweede Kamer", betekenis: "Volksvertegenwoordiging gekozen door burgers (direct); heeft recht om wetten te maken en de regering te controleren." },
+    { begrip: "Eerste Kamer", betekenis: "Kamer van 'heroverweging'; beoordeelt wetten op uitvoerbaarheid en rechtmatigheid, maar mag geen wetsvoorstellen indienen." },
+    { begrip: "Staten-Generaal", betekenis: "Gezamenlijke naam voor de Eerste en Tweede Kamer." },
+    { begrip: "Fractie", betekenis: "Alle Kamerleden van dezelfde politieke partij samen." },
+    { begrip: "Fractiediscipline", betekenis: "Afspraken binnen een fractie om hetzelfde stemgedrag te vertonen." },
+    { begrip: "Coalitie", betekenis: "Samenwerking van meerdere partijen om een regering te vormen." },
+    { begrip: "Oppositie", betekenis: "Partijen die niet meeregeren, maar de regering kritisch volgen." },
+    { begrip: "Regeerakkoord", betekenis: "Het contract met plannen en afspraken van partijen die samen een kabinet vormen." },
+    { begrip: "Rijksbegroting", betekenis: "Overzicht van inkomsten en uitgaven van de overheid voor het komende jaar." },
+    { begrip: "Algemene Beschouwingen", betekenis: "Groot politiek debat over de plannen van het kabinet, na Prinsjesdag." },
+    { begrip: "Motie van wantrouwen", betekenis: "Uitspraak van de Tweede Kamer dat zij een minister of het kabinet niet meer vertrouwt." },
+    { begrip: "Motie van treurnis", betekenis: "Kritische uitspraak van onvrede, minder zwaar dan een motie van wantrouwen." },
+    { begrip: "Parlementaire enquête", betekenis: "Groot onderzoek door de Tweede Kamer naar het functioneren van bestuur of beleid." },
+    { begrip: "Miljoenennota", betekenis: "Toelichting bij de Rijksbegroting, gepresenteerd op Prinsjesdag." },
+    { begrip: "Prinsjesdag", betekenis: "Jaarlijks moment waarop de koning de troonrede voorleest en de begroting wordt aangeboden. Altijd op de derde dinsdag van september." },
+    { begrip: "Raad van State", betekenis: "Adviesorgaan over wetsvoorstellen en hoogste bestuursrechter in Nederland." },
+    { begrip: "Provinciale Staten", betekenis: "Provinciale volksvertegenwoordiging, kiest onder andere de Eerste Kamer." },
+    { begrip: "Gemeenteraad", betekenis: "Het lokale volksvertegenwoordigend orgaan van een gemeente." },
+    { begrip: "College van B&W", betekenis: "Het dagelijks bestuur van de gemeente (burgemeester en wethouders)."},
+
+    { begrip: "Stakeholder", betekenis: "Iemand of een groep die belang heeft bij een bepaalde beslissing, ontwikkeling of verandering, zoals burgers, bedrijven, de overheid of maatschappelijke organisaties." },
+    { begrip: "Belang", betekenis: "Het voordeel of nadeel dat iemand ervaart bij een besluit of ontwikkeling. Dit kan financieel, sociaal, cultureel of moreel zijn." },
+    { begrip: "Macht", betekenis: "Het vermogen van een persoon of groep om invloed uit te oefenen op anderen en zo besluiten of gedragingen te sturen." },
+    { begrip: "Machtsmiddel", betekenis: "Een hulpmiddel waarmee iemand macht kan uitoefenen, zoals geld, kennis, een functie of toegang tot de media." },
+    { begrip: "Invloed", betekenis: "De mogelijkheid om de mening of het gedrag van anderen te veranderen, ook zonder formele macht." },
+    { begrip: "Lobby", betekenis: "Het (vaak achter de schermen) proberen politici en bestuurders te overtuigen van een standpunt, bijvoorbeeld door bedrijven of belangengroepen." },
+    { begrip: "Belangengroep", betekenis: "Een georganiseerde groep die opkomt voor de belangen van een specifieke groep mensen, zoals vakbonden of consumentenorganisaties." },
+    { begrip: "Pressiegroep", betekenis: "Een groep die actief druk uitoefent op politici of bestuurders om iets te veranderen, bijvoorbeeld door acties of campagnes." },
+    { begrip: "Media", betekenis: "Krant, televisie, radio en sociale media die informatie verspreiden en zo de mening van het publiek kunnen beïnvloeden." },
+    { begrip: "Opiniepeiling", betekenis: "Een onderzoek waarbij wordt gevraagd wat mensen ergens van vinden, bijvoorbeeld over een politieke partij of maatregel." },
+    { begrip: "Protest", betekenis: "Een manier om actief te laten zien dat je het oneens bent met een besluit of situatie, bijvoorbeeld door een actie of manifestatie." },
+    { begrip: "Demonstratie", betekenis: "Een bijeenkomst van mensen die samen in het openbaar protesteren om aandacht te vragen voor een onderwerp." },
+    { begrip: "Petitie", betekenis: "Een schriftelijk verzoek van burgers aan de overheid of politiek, vaak met handtekeningen, om iets te veranderen." },
+    { begrip: "Referendum", betekenis: "Een volksstemming waarin burgers zich direct uitspreken over een politieke kwestie of wetsvoorstel." },
+    { begrip: "Actiegroep", betekenis: "Een tijdelijke groep burgers die zich inzet voor één specifiek doel, vaak met acties zoals flyers, campagnes of bijeenkomsten." },
+    { begrip: "Belangenconflict", betekenis: "Een situatie waarin de belangen van verschillende personen of groepen botsen, bijvoorbeeld werknemers versus werkgevers." },
+    { begrip: "Compromis", betekenis: "Een oplossing waarbij alle betrokken partijen een deel van hun wensen opgeven om samen tot een akkoord te komen." },
+    { begrip: "Akkoord", betekenis: "Een officiële afspraak tussen partijen over een bepaald onderwerp, zoals een regeerakkoord of klimaatakkoord." },
+    { begrip: "Onderhandeling", betekenis: "Een gesprek waarbij partijen met verschillende belangen proberen een gezamenlijke oplossing te vinden." },
+    { begrip: "Wetgeving", betekenis: "Het geheel van wetten dat door de regering en het parlement wordt gemaakt en ingevoerd." },
+    { begrip: "Beleid", betekenis: "Een plan of strategie van de overheid waarmee wordt geprobeerd bepaalde doelen te bereiken, bijvoorbeeld op het gebied van zorg of onderwijs." },
+    { begrip: "Besluitvorming", betekenis: "Het proces waarin keuzes worden gemaakt door politici of bestuurders, vaak na overleg en debat." },
+    { begrip: "Status quo", betekenis: "De huidige situatie die vaak lastig te veranderen is omdat veel partijen er belang bij hebben dat die blijft zoals hij is." },
+    { begrip: "Publieke opinie", betekenis: "De heersende mening van (een groot deel van) de bevolking over een bepaald onderwerp of thema." },
+    { begrip: "Veranderingstraject", betekenis: "Het hele proces waarin een idee uitgroeit tot een besluit en vervolgens wordt uitgevoerd, met alle stappen en obstakels die daarbij horen." }
+];
+
+let score = 0;
+let currentCorrectAnswer = "";
+
+function shuffle(array){ return array.sort(()=>Math.random()-0.5); }
+
+function nextQuestion(){
+    const randomCard = flashcards[Math.floor(Math.random() * flashcards.length)];
+    currentCorrectAnswer = randomCard.begrip;
+    document.getElementById("question").innerText = randomCard.betekenis;
+
+    let wrongAnswers = shuffle(flashcards.filter(c=>c.begrip!==currentCorrectAnswer).map(c=>c.begrip)).slice(0,3);
+    let answerOptions = shuffle([currentCorrectAnswer,...wrongAnswers]);
+
+    const answersDiv=document.getElementById("answers");
+    answersDiv.innerHTML="";
+    answerOptions.forEach(option=>{
+        const btn=document.createElement("button");
+        btn.innerText=option;
+        btn.onclick=()=>checkAnswer(btn,option);
+        answersDiv.appendChild(btn);
+    });
+}
+
+function checkAnswer(button, selected){
+    const buttons=document.querySelectorAll(".answers button");
+    buttons.forEach(b=>b.disabled=true);
+
+    if(selected===currentCorrectAnswer){ score++; button.classList.add("correct"); }
+    else{ score--; button.classList.add("wrong"); buttons.forEach(b=>{ if(b.innerText===currentCorrectAnswer)b.classList.add("correct"); }); }
+
+    document.getElementById("score").innerText=score;
+}
+
+function toggleTheme(){ document.body.classList.toggle("dark"); localStorage.setItem("theme",document.body.classList.contains("dark")?"dark":"light"); }
+
+function goToFlashcards(){ window.location.href="index.html"; }
+
+const savedTheme=localStorage.getItem("theme"); if(savedTheme==="dark"){ document.body.classList.add("dark"); }
+
+nextQuestion();
+</script>
+</body>
+</html>
