@@ -148,6 +148,162 @@ h1 {
 body.dark .coming-soon {
     color: #ccc; /* lichtere tekst in dark mode */
 }
+
+/* ---------- MODAL ---------- */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    align-items: center;
+    justify-content: center;
+}
+
+.modal.show {
+    display: flex;
+}
+
+.modal-content {
+    background: var(--card);
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 0 30px rgba(0,0,0,0.5);
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+}
+
+.modal-content h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+.modal-content input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 2px solid var(--button);
+    border-radius: 8px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 16px;
+    box-sizing: border-box;
+    background: var(--card);
+    color: var(--text);
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.modal-buttons button {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'Nunito', sans-serif;
+    font-size: 16px;
+    transition: 0.2s;
+}
+
+.modal-buttons .save-btn {
+    background: var(--button);
+    color: white;
+}
+
+.modal-buttons .save-btn:hover {
+    filter: brightness(0.9);
+}
+
+.modal-buttons .skip-btn {
+    background: #ccc;
+    color: var(--text);
+}
+
+.modal-buttons .skip-btn:hover {
+    background: #aaa;
+}
+
+.game-end-modal {
+    display: none;
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    align-items: center;
+    justify-content: center;
+}
+
+.game-end-modal.show {
+    display: flex;
+}
+
+.game-end-content {
+    background: var(--card);
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 0 30px rgba(0,0,0,0.5);
+    max-width: 500px;
+    width: 90%;
+    text-align: center;
+}
+
+.game-end-content h2 {
+    font-size: 32px;
+    margin: 0 0 20px 0;
+    color: var(--button);
+}
+
+.final-score {
+    font-size: 48px;
+    font-weight: 700;
+    margin: 20px 0;
+    color: var(--button);
+}
+
+.game-end-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 30px;
+    flex-wrap: wrap;
+}
+
+.game-end-buttons button {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'Nunito', sans-serif;
+    font-size: 16px;
+    transition: 0.2s;
+}
+
+.game-end-buttons .primary-btn {
+    background: var(--button);
+    color: white;
+}
+
+.game-end-buttons .primary-btn:hover {
+    filter: brightness(0.9);
+}
+
+.game-end-buttons .secondary-btn {
+    background: #ccc;
+    color: var(--text);
+}
+
+.game-end-buttons .secondary-btn:hover {
+    background: #aaa;
+}
 </style>
 </head>
 <body>
@@ -159,7 +315,33 @@ body.dark .coming-soon {
         <button class="flashcard-btn" onclick="goToFlashcards()">📚 Ga terug naar Flashcards</button>
     </div>
     <div class="header-right">
+        <button onclick="goToLeaderboard()">🏆 Leaderboard</button>
         <button onclick="toggleTheme()">🌙 / ☀️</button>
+    </div>
+</div>
+
+<!-- ---------- USERNAME MODAL ---------- -->
+<div class="modal" id="usernameModal">
+    <div class="modal-content">
+        <h2>Enter Your Name</h2>
+        <input type="text" id="usernameInput" placeholder="Your username" maxlength="30">
+        <div class="modal-buttons">
+            <button class="save-btn" onclick="startGameWithUsername()">Start</button>
+            <button class="skip-btn" onclick="startGameAnon()">Anonymous</button>
+        </div>
+    </div>
+</div>
+
+<!-- ---------- GAME END MODAL ---------- -->
+<div class="game-end-modal" id="gameEndModal">
+    <div class="game-end-content">
+        <h2>Game Over!</h2>
+        <p>Your final score:</p>
+        <div class="final-score" id="finalScore">0</div>
+        <div class="game-end-buttons">
+            <button class="primary-btn" onclick="saveAndPlayAgain()">Save & Play Again</button>
+            <button class="secondary-btn" onclick="viewLeaderboard()">View Leaderboard</button>
+        </div>
     </div>
 </div>
 
@@ -168,6 +350,7 @@ body.dark .coming-soon {
     <div class="question" id="question"></div>
     <div class="answers" id="answers"></div>
     <button class="next-btn" onclick="nextQuestion()">Volgende vraag</button>
+    <button class="next-btn" onclick="endGame()" style="background: #dc2626; margin-top: 10px;">Spel beëindigen</button>
     <div class="score">Score: <span id="score">0</span></div>
 </div>
 <!-- Coming soon tekst -->
@@ -234,10 +417,17 @@ const flashcards = [
 
 let score = 0;
 let currentCorrectAnswer = "";
+let gameActive = true;
+let currentUsername = "";
+let questionCount = 0;
 
 function shuffle(array){ return array.sort(()=>Math.random()-0.5); }
 
 function nextQuestion(){
+    if (!gameActive) return;
+    
+    questionCount++;
+
     const randomCard = flashcards[Math.floor(Math.random() * flashcards.length)];
     currentCorrectAnswer = randomCard.begrip;
     document.getElementById("question").innerText = randomCard.betekenis;
@@ -247,6 +437,8 @@ function nextQuestion(){
 
     const answersDiv=document.getElementById("answers");
     answersDiv.innerHTML="";
+    answersDiv.style.pointerEvents = "auto";
+    
     answerOptions.forEach(option=>{
         const btn=document.createElement("button");
         btn.innerText=option;
@@ -259,19 +451,137 @@ function checkAnswer(button, selected){
     const buttons=document.querySelectorAll(".answers button");
     buttons.forEach(b=>b.disabled=true);
 
-    if(selected===currentCorrectAnswer){ score++; button.classList.add("correct"); }
-    else{ score--; button.classList.add("wrong"); buttons.forEach(b=>{ if(b.innerText===currentCorrectAnswer)b.classList.add("correct"); }); }
+    let pointsEarned = 0;
+    if(selected===currentCorrectAnswer){ 
+        score++; 
+        pointsEarned = 1;
+        button.classList.add("correct"); 
+    }
+    else{ 
+        score--; 
+        pointsEarned = -1;
+        button.classList.add("wrong"); 
+        buttons.forEach(b=>{ if(b.innerText===currentCorrectAnswer)b.classList.add("correct"); }); 
+    }
 
     document.getElementById("score").innerText=score;
+    
+    // Auto-save score after each question
+    if (currentUsername) {
+        saveScoreAfterQuestion(pointsEarned);
+    }
 }
 
-function toggleTheme(){ document.body.classList.toggle("dark"); localStorage.setItem("theme",document.body.classList.contains("dark")?"dark":"light"); }
+function endGame() {
+    gameActive = false;
+    document.getElementById("question").innerText = "Game Over! Your score will be saved.";
+    document.getElementById("answers").innerHTML = "";
+    document.getElementById("answers").style.pointerEvents = "none";
+    document.getElementById("finalScore").innerText = score;
+    document.getElementById("gameEndModal").classList.add("show");
+}
 
-function goToFlashcards(){ window.location.href="index.html"; }
+async function saveScore() {
+    if (!currentUsername) return false;
+    
+    try {
+        const response = await fetch('/api/scores', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                username: currentUsername, 
+                score: score 
+            })
+        });
+        
+        const data = await response.json();
+        return data.success;
+    } catch (error) {
+        console.error('Error saving score:', error);
+        return false;
+    }
+}
 
-const savedTheme=localStorage.getItem("theme"); if(savedTheme==="dark"){ document.body.classList.add("dark"); }
+async function saveScoreAfterQuestion(points) {
+    if (!currentUsername) return;
+    
+    try {
+        await fetch('/api/scores', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                username: currentUsername, 
+                score: points
+            })
+        });
+    } catch (error) {
+        console.error('Error auto-saving score:', error);
+    }
+}
 
-nextQuestion();
+function startGameWithUsername() {
+    const username = document.getElementById("usernameInput").value.trim();
+    if (!username) {
+        alert("Please enter a username");
+        return;
+    }
+    currentUsername = username;
+    startGame();
+}
+
+function startGameAnon() {
+    currentUsername = "Anonymous_" + Math.random().toString(36).substr(2, 9);
+    startGame();
+}
+
+function startGame() {
+    document.getElementById("usernameModal").classList.remove("show");
+    score = 0;
+    questionCount = 0;
+    gameActive = true;
+    document.getElementById("score").innerText = "0";
+    nextQuestion();
+}
+
+async function saveAndPlayAgain() {
+    document.getElementById("gameEndModal").classList.remove("show");
+    const saved = await saveScore();
+    if (saved) {
+        alert("Score saved! Playing again...");
+    } else {
+        alert("Failed to save score, but you can play again!");
+    }
+    showUsernameModal();
+}
+
+function viewLeaderboard() {
+    window.location.href = 'leaderboard.html';
+}
+
+function showUsernameModal() {
+    document.getElementById("usernameInput").value = currentUsername;
+    document.getElementById("usernameModal").classList.add("show");
+}
+
+function toggleTheme(){ 
+    document.body.classList.toggle("dark"); 
+    localStorage.setItem("theme",document.body.classList.contains("dark")?"dark":"light"); 
+}
+
+function goToFlashcards(){ 
+    window.location.href="index.html"; 
+}
+
+function goToLeaderboard() {
+    window.location.href="leaderboard.html";
+}
+
+const savedTheme=localStorage.getItem("theme"); 
+if(savedTheme==="dark"){ document.body.classList.add("dark"); }
+
+window.addEventListener('load', () => {
+    showUsernameModal();
+});
 </script>
 </body>
 </html>

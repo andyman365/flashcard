@@ -309,10 +309,12 @@ alle.addEventListener("change", () => {
     if(alle.checked){
         delen.forEach(d => d.checked = false);
     }
+    currentIndex = -1;
 });
 delen.forEach(d => {
     d.addEventListener("change", () => {
         if(d.checked){ alle.checked = false; }
+        currentIndex = -1;
     });
 });
 

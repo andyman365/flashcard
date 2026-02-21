@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Leaderboard - Flashcards</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+    --bg: #f6f7fb;
+    --card: #ffffff;
+    --header: #ffcc66;
+    --text: #1f2937;
+    --button: #2563eb;
+    --button-text: white;
+}
+
+body.dark {
+    --bg: #0f172a;
+    --card: #1e293b;
+    --header: #ffb84d;
+    --text: #f2f2f2;
+    --button: #3b82f6;
+    --button-text: white;
+}
+
+body {
+    margin: 0;
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    transition: 0.3s;
+}
+
+.header {
+    background: var(--header);
+    padding: 15px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.header-left { font-weight: 700; font-size: 20px; }
+.header-right button {
+    margin-left: 10px;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.container {
+    max-width: 700px;
+    margin: 40px auto;
+    background: var(--card);
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.3);
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.leaderboard-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 30px;
+}
+
+.leaderboard-table thead {
+    background: var(--button);
+    color: white;
+}
+
+.leaderboard-table th {
+    padding: 15px;
+    text-align: left;
+    font-weight: 700;
+}
+
+.leaderboard-table td {
+    padding: 15px;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+
+.leaderboard-table tbody tr:hover {
+    background: rgba(37, 99, 235, 0.1);
+}
+
+.rank-1 { background: #ffd700 !important; font-weight: 700; }
+.rank-2 { background: #c0c0c0 !important; font-weight: 700; }
+.rank-3 { background: #cd7f32 !important; font-weight: 700; }
+
+.loading {
+    text-align: center;
+    padding: 40px;
+    font-size: 18px;
+}
+
+.error {
+    text-align: center;
+    padding: 20px;
+    background: #fce4e4;
+    color: #c33;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 30px;
+}
+
+.pagination button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 8px;
+    background: var(--button);
+    color: white;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.pagination button:hover {
+    filter: brightness(0.9);
+}
+
+.pagination button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.pagination span {
+    padding: 10px;
+}
+
+.back-btn {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 12px 25px;
+    background: var(--button);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'Nunito', sans-serif;
+    font-size: 16px;
+    transition: 0.2s;
+}
+
+.back-btn:hover {
+    filter: brightness(0.9);
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+    <div class="header-left">🏆 Leaderboard</div>
+    <div class="header-right">
+        <button onclick="toggleTheme()">🌙 / ☀️</button>
+    </div>
+</div>
+
+<div class="container">
+    <h1>Top Scores</h1>
+    <div id="error" class="error" style="display:none;"></div>
+    <div id="loading" class="loading">Loading leaderboard...</div>
+    <table class="leaderboard-table" id="leaderboard" style="display:none;">
+        <thead>
+            <tr>
+                <th>Rank</th>
+                <th>Username</th>
+                <th>Score</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody id="scoresBody"></tbody>
+    </table>
+
+    <div class="pagination" id="pagination"></div>
+    <button class="back-btn" onclick="goBack()">← Terug naar Toetsmodus</button>
+</div>
+
+<script>
+let currentPage = 1;
+const limit = 10;
+
+async function loadLeaderboard(page = 1) {
+    const loading = document.getElementById('loading');
+    const error = document.getElementById('error');
+    const table = document.getElementById('leaderboard');
+    const tbody = document.getElementById('scoresBody');
+    
+    loading.style.display = 'block';
+    error.style.display = 'none';
+    table.style.display = 'none';
+
+    try {
+        const response = await fetch(`/api/scores?page=${page}&limit=${limit}`);
+        const data = await response.json();
+
+        if (!data.success) {
+            throw new Error(data.error || 'Failed to load leaderboard');
+        }
+
+        tbody.innerHTML = '';
+        data.scores.forEach(score => {
+            const row = document.createElement('tr');
+            let rankClass = '';
+            if (score.rank === 1) rankClass = 'rank-1';
+            else if (score.rank === 2) rankClass = 'rank-2';
+            else if (score.rank === 3) rankClass = 'rank-3';
+
+            row.className = rankClass;
+            row.innerHTML = `
+                <td>${score.rank}</td>
+                <td>${escapeHtml(score.username)}</td>
+                <td><strong>${score.score}</strong></td>
+                <td>${new Date(score.date).toLocaleDateString()}</td>
+            `;
+            tbody.appendChild(row);
+        });
+
+        // Pagination
+        const paginationDiv = document.getElementById('pagination');
+        paginationDiv.innerHTML = '';
+
+        if (data.pagination.pages > 1) {
+            if (page > 1) {
+                const prevBtn = document.createElement('button');
+                prevBtn.textContent = '← Vorige';
+                prevBtn.onclick = () => loadLeaderboard(page - 1);
+                paginationDiv.appendChild(prevBtn);
+            }
+
+            const pageSpan = document.createElement('span');
+            pageSpan.textContent = `Pagina ${page} van ${data.pagination.pages}`;
+            paginationDiv.appendChild(pageSpan);
+
+            if (page < data.pagination.pages) {
+                const nextBtn = document.createElement('button');
+                nextBtn.textContent = 'Volgende →';
+                nextBtn.onclick = () => loadLeaderboard(page + 1);
+                paginationDiv.appendChild(nextBtn);
+            }
+        }
+
+        loading.style.display = 'none';
+        table.style.display = 'table';
+        currentPage = page;
+
+    } catch (err) {
+        console.error('Error:', err);
+        loading.style.display = 'none';
+        error.style.display = 'block';
+        error.textContent = 'Error: ' + err.message;
+    }
+}
+
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+function toggleTheme() {
+    document.body.classList.toggle("dark");
+    localStorage.setItem("theme", document.body.classList.contains("dark") ? "dark" : "light");
+}
+
+function goBack() {
+    window.location.href = 'game.html';
+}
+
+const savedTheme = localStorage.getItem("theme");
+if (savedTheme === "dark") { document.body.classList.add("dark"); }
+
+loadLeaderboard();
+</script>
+
+</body>
+</html>
