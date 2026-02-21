@@ -188,6 +188,7 @@ body {
     </div>
     <div class="header-right">
         <button class="toggle" onclick="toggleTheme()">🌙 / ☀️</button>
+        <button class="toggle" onclick="logout()" style="background: #dc2626;">Logout</button>
     </div>
 </div>
 
@@ -359,9 +360,22 @@ if(localStorage.getItem("theme")==="dark"){ document.body.classList.add("dark");
 
 /* ---------- NAVIGATIE ---------- */
 function goToQuiz(){ window.location.href = "game.html"; }
+function logout() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('username');
+    window.location.href = 'login.html';
+}
 
 /* ---------- START ---------- */
-showCard();
+// Check authentication
+const token = localStorage.getItem('token');
+const username = localStorage.getItem('username');
+
+if (!token || !username) {
+    window.location.href = 'login.html';
+} else {
+    showCard();
+}
 </script>
 </body>
 </html>

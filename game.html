@@ -317,17 +317,17 @@ body.dark .coming-soon {
     <div class="header-right">
         <button onclick="goToLeaderboard()">🏆 Leaderboard</button>
         <button onclick="toggleTheme()">🌙 / ☀️</button>
+        <button onclick="logout()" style="background: #dc2626;">Logout</button>
     </div>
 </div>
 
 <!-- ---------- USERNAME MODAL ---------- -->
 <div class="modal" id="usernameModal">
     <div class="modal-content">
-        <h2>Enter Your Name</h2>
-        <input type="text" id="usernameInput" placeholder="Your username" maxlength="30">
+        <h2 id="welcomeText">Welcome!</h2>
+        <p id="usernameDisplay" style="font-size: 18px; margin: 20px 0; font-weight: bold;"></p>
         <div class="modal-buttons">
-            <button class="save-btn" onclick="startGameWithUsername()">Start</button>
-            <button class="skip-btn" onclick="startGameAnon()">Anonymous</button>
+            <button class="save-btn" onclick="startGame()">Start Game</button>
         </div>
     </div>
 </div>
@@ -520,17 +520,10 @@ async function saveScoreAfterQuestion(points) {
 }
 
 function startGameWithUsername() {
-    const username = document.getElementById("usernameInput").value.trim();
-    if (!username) {
-        alert("Please enter a username");
-        return;
-    }
-    currentUsername = username;
     startGame();
 }
 
 function startGameAnon() {
-    currentUsername = "Anonymous_" + Math.random().toString(36).substr(2, 9);
     startGame();
 }
 
@@ -559,7 +552,8 @@ function viewLeaderboard() {
 }
 
 function showUsernameModal() {
-    document.getElementById("usernameInput").value = currentUsername;
+    document.getElementById("usernameDisplay").innerText = currentUsername;
+    document.getElementById("welcomeText").innerText = `Welcome, ${currentUsername}!`;
     document.getElementById("usernameModal").classList.add("show");
 }
 
@@ -576,10 +570,27 @@ function goToLeaderboard() {
     window.location.href="leaderboard.html";
 }
 
+function logout() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('username');
+    window.location.href = 'login.html';
+}
+
 const savedTheme=localStorage.getItem("theme"); 
 if(savedTheme==="dark"){ document.body.classList.add("dark"); }
 
 window.addEventListener('load', () => {
+    // Check if user is logged in
+    const token = localStorage.getItem('token');
+    const username = localStorage.getItem('username');
+    
+    if (!token || !username) {
+        // Redirect to login
+        window.location.href = 'login.html';
+        return;
+    }
+    
+    currentUsername = username;
     showUsernameModal();
 });
 </script>

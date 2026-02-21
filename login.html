@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login - Flashcards</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+    --bg: #f6f7fb;
+    --card: #ffffff;
+    --header: #ffcc66;
+    --text: #1f2937;
+    --button: #2563eb;
+    --button-text: white;
+}
+
+body.dark {
+    --bg: #0f172a;
+    --card: #1e293b;
+    --header: #ffb84d;
+    --text: #f2f2f2;
+    --button: #3b82f6;
+    --button-text: white;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    transition: 0.3s;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.header {
+    position: fixed;
+    top: 0;
+    right: 0;
+    padding: 20px;
+}
+
+.theme-btn {
+    border: none;
+    background: var(--header);
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.container {
+    background: var(--card);
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.3);
+    max-width: 400px;
+    width: 100%;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 28px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 700;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 16px;
+    transition: 0.2s;
+    background: var(--card);
+    color: var(--text);
+}
+
+input:focus {
+    outline: none;
+    border-color: var(--button);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background: var(--button);
+    color: white;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+button:hover {
+    filter: brightness(0.9);
+}
+
+.error {
+    background: #fee;
+    color: #c33;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    display: none;
+}
+
+.error.show {
+    display: block;
+}
+
+.toggle-form {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+.toggle-form button {
+    background: none;
+    color: var(--button);
+    text-decoration: underline;
+    padding: 0;
+    width: auto;
+    font-weight: 400;
+}
+
+.toggle-form button:hover {
+    filter: none;
+    opacity: 0.8;
+}
+
+.info-text {
+    text-align: center;
+    font-size: 14px;
+    color: #888;
+    margin-top: 15px;
+}
+
+.form-container {
+    display: none;
+}
+
+.form-container.active {
+    display: block;
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+    <button class="theme-btn" onclick="toggleTheme()">🌙 / ☀️</button>
+</div>
+
+<div class="container">
+    <h1>📚 Flashcards</h1>
+
+    <div class="error" id="error"></div>
+
+    <!-- Login Form -->
+    <div class="form-container active" id="loginForm">
+        <h2 style="text-align: center; margin-bottom: 20px;">Login</h2>
+        <div class="form-group">
+            <label for="loginUsername">Username</label>
+            <input type="text" id="loginUsername" placeholder="Voer je gebruikersnaam in">
+        </div>
+        <div class="form-group">
+            <label for="loginPassword">Password</label>
+            <input type="password" id="loginPassword" placeholder="Voer je wachtwoord in">
+        </div>
+        <button onclick="handleLogin()">Login</button>
+        <div class="toggle-form">
+            Geen account? <button onclick="toggleForms()">Registreer</button>
+        </div>
+    </div>
+
+    <!-- Register Form -->
+    <div class="form-container" id="registerForm">
+        <h2 style="text-align: center; margin-bottom: 20px;">Create Account</h2>
+        <div class="form-group">
+            <label for="regUsername">Username</label>
+            <input type="text" id="regUsername" placeholder="Kies een gebruikersnaam">
+        </div>
+        <div class="form-group">
+            <label for="regPassword">Password</label>
+            <input type="password" id="regPassword" placeholder="Kies een wachtwoord (min. 6 tekens)">
+        </div>
+        <div class="form-group">
+            <label for="regPasswordConfirm">Confirm Password</label>
+            <input type="password" id="regPasswordConfirm" placeholder="Bevestig wachtwoord">
+        </div>
+        <button onclick="handleRegister()">Register</button>
+        <div class="toggle-form">
+            Al een account? <button onclick="toggleForms()">Login</button>
+        </div>
+    </div>
+
+    <div class="info-text">
+        Demo credits system: Your score auto-saves after each question 🎯
+    </div>
+</div>
+
+<script>
+function toggleForms() {
+    document.getElementById('loginForm').classList.toggle('active');
+    document.getElementById('registerForm').classList.toggle('active');
+    clearError();
+}
+
+function showError(message) {
+    const errorDiv = document.getElementById('error');
+    errorDiv.textContent = message;
+    errorDiv.classList.add('show');
+}
+
+function clearError() {
+    const errorDiv = document.getElementById('error');
+    errorDiv.classList.remove('show');
+    errorDiv.textContent = '';
+}
+
+async function handleLogin() {
+    const username = document.getElementById('loginUsername').value.trim();
+    const password = document.getElementById('loginPassword').value;
+
+    if (!username || !password) {
+        showError('Username en password zijn verplicht');
+        return;
+    }
+
+    try {
+        const response = await fetch('/api/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            showError(data.error || 'Login failed');
+            return;
+        }
+
+        // Save token and username
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('username', data.username);
+
+        // Redirect to flashcards
+        window.location.href = 'index.html';
+
+    } catch (error) {
+        console.error('Error:', error);
+        showError('Connection error');
+    }
+}
+
+async function handleRegister() {
+    const username = document.getElementById('regUsername').value.trim();
+    const password = document.getElementById('regPassword').value;
+    const passwordConfirm = document.getElementById('regPasswordConfirm').value;
+
+    if (!username || !password) {
+        showError('Username en password zijn verplicht');
+        return;
+    }
+
+    if (password.length < 6) {
+        showError('Password moet minimaal 6 tekens zijn');
+        return;
+    }
+
+    if (password !== passwordConfirm) {
+        showError('Passwords komen niet overeen');
+        return;
+    }
+
+    try {
+        const response = await fetch('/api/auth/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            showError(data.error || 'Registration failed');
+            return;
+        }
+
+        // Save token and username
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('username', data.username);
+
+        // Redirect to flashcards
+        window.location.href = 'index.html';
+
+    } catch (error) {
+        console.error('Error:', error);
+        showError('Connection error');
+    }
+}
+
+function toggleTheme() {
+    document.body.classList.toggle('dark');
+    localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+}
+
+const savedTheme = localStorage.getItem('theme');
+if (savedTheme === 'dark') {
+    document.body.classList.add('dark');
+}
+
+// Allow Enter key to submit
+document.getElementById('loginPassword').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') handleLogin();
+});
+
+document.getElementById('regPasswordConfirm').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') handleRegister();
+});
+</script>
+
+</body>
+</html>

@@ -168,6 +168,7 @@ h1 {
     <div class="header-left">🏆 Leaderboard</div>
     <div class="header-right">
         <button onclick="toggleTheme()">🌙 / ☀️</button>
+        <button onclick="logout()" style="background: #dc2626;">Logout</button>
     </div>
 </div>
 
@@ -282,10 +283,22 @@ function goBack() {
     window.location.href = 'game.html';
 }
 
+function logout() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('username');
+    window.location.href = 'login.html';
+}
+
 const savedTheme = localStorage.getItem("theme");
 if (savedTheme === "dark") { document.body.classList.add("dark"); }
 
-loadLeaderboard();
+// Check authentication
+const token = localStorage.getItem('token');
+if (!token) {
+    window.location.href = 'login.html';
+} else {
+    loadLeaderboard();
+}
 </script>
 
 </body>
