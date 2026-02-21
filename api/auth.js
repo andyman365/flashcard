@@ -39,7 +39,7 @@ export default async function handler(req, res) {
         await usersCollection.createIndex({ username: 1 }, { unique: true });
 
         if (req.method === 'POST') {
-            const { username, password, action } = req.body;
+            const { username, password } = req.body;
 
             if (!username || !password) {
                 return res.status(400).json({ error: 'Username and password are required' });
@@ -49,8 +49,12 @@ export default async function handler(req, res) {
                 return res.status(400).json({ error: 'Password must be at least 6 characters' });
             }
 
+            // Check if logging in or registering based on URL path
+            const isLogin = req.url.includes('/login');
+            const isRegister = req.url.includes('/register');
+
             // Registration
-            if (action === 'register') {
+            if (isRegister) {
                 const existingUser = await usersCollection.findOne({
                     username: { $regex: `^${username.trim()}$`, $options: 'i' }
                 });
@@ -83,7 +87,7 @@ export default async function handler(req, res) {
             }
 
             // Login
-            if (action === 'login') {
+            if (isLogin) {
                 const user = await usersCollection.findOne({
                     username: { $regex: `^${username.trim()}$`, $options: 'i' }
                 });
@@ -112,7 +116,54 @@ export default async function handler(req, res) {
                 });
             }
 
-            return res.status(400).json({ error: 'Invalid action' });
+            // If no specific action, try to login first, then register
+            const existingUser = await usersCollection.findOne({
+                username: { $regex: `^${username.trim()}$`, $options: 'i' }
+            });
+
+            if (existingUser) {
+                // Try login
+                const passwordMatch = await bcrypt.compare(password, existingUser.password);
+                if (!passwordMatch) {
+                    return res.status(401).json({ error: 'Invalid username or password' });
+                }
+
+                const token = jwt.sign(
+                    { userId: existingUser._id, username: existingUser.username },
+                    JWT_SECRET,
+                    { expiresIn: '30d' }
+                );
+
+                return res.status(200).json({
+                    success: true,
+                    message: 'Login successful',
+                    token,
+                    username: existingUser.username
+                });
+            } else {
+                // Register new user
+                const hashedPassword = await bcrypt.hash(password, 10);
+
+                const result = await usersCollection.insertOne({
+                    username: username.trim(),
+                    password: hashedPassword,
+                    createdAt: new Date(),
+                    score: 0
+                });
+
+                const token = jwt.sign(
+                    { userId: result.insertedId, username: username.trim() },
+                    JWT_SECRET,
+                    { expiresIn: '30d' }
+                );
+
+                return res.status(201).json({
+                    success: true,
+                    message: 'Account created successfully',
+                    token,
+                    username: username.trim()
+                });
+            }
         }
 
         return res.status(405).json({ error: 'Method not allowed' });
