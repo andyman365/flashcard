@@ -561,7 +561,7 @@ async function updateUserRank() {
         const data = await response.json();
         
         if (data.success && data.scores) {
-            // Find user's rank
+            // Find user's rank and score
             const userScore = data.scores.find(s => s.username.toLowerCase() === currentUsername.toLowerCase());
             
             if (userScore) {
@@ -575,6 +575,27 @@ async function updateUserRank() {
         }
     } catch (error) {
         console.error('Error fetching rank:', error);
+    }
+}
+
+async function loadUserScore() {
+    if (!currentUsername) return;
+    
+    try {
+        const response = await fetch('/api/scores?limit=1000'); // Fetch all to find user
+        const data = await response.json();
+        
+        if (data.success && data.scores) {
+            const userScore = data.scores.find(s => s.username.toLowerCase() === currentUsername.toLowerCase());
+            
+            if (userScore) {
+                score = userScore.score;
+                document.getElementById("score").innerText = score;
+                console.log(`Loaded score from DB: ${score}`);
+            }
+        }
+    } catch (error) {
+        console.error('Error loading user score:', error);
     }
 }
 
@@ -605,10 +626,9 @@ function startGameAnon() {
 
 function startGame() {
     document.getElementById("usernameModal").classList.remove("show");
-    score = 0;
     questionCount = 0;
     gameActive = true;
-    document.getElementById("score").innerText = "0";
+    loadUserScore(); // Load user's current score from database
     updateUserRank(); // Show initial rank
     nextQuestion();
 }
