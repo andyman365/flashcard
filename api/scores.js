@@ -115,7 +115,6 @@ export default async function handler(req, res) {
                     pages: totalPages,
                 },
             });
-        }
 
         } else if (req.method === 'DELETE') {
             // Delete a user's score
