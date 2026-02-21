@@ -189,7 +189,10 @@ h1 {
     </table>
 
     <div class="pagination" id="pagination"></div>
-    <button class="back-btn" onclick="goBack()">← Terug naar Toetsmodus</button>
+    <div style="display: flex; gap: 10px; justify-content: center; margin-top: 20px; flex-wrap: wrap;">
+        <button class="back-btn" onclick="goBack()">← Terug naar Toetsmodus</button>
+        <button class="back-btn" onclick="deleteMyScore()" style="background: #dc2626;">🗑️ Verwijder mijn score</button>
+    </div>
 </div>
 
 <script>
@@ -287,6 +290,41 @@ function logout() {
     localStorage.removeItem('token');
     localStorage.removeItem('username');
     window.location.href = 'login.html';
+}
+
+async function deleteMyScore() {
+    const username = localStorage.getItem('username');
+    
+    if (!username) {
+        alert('Je bent niet ingelogd');
+        return;
+    }
+
+    if (!confirm(`Weet je zeker dat je je score wilt verwijderen? Dit kan niet ongedaan gemaakt worden.`)) {
+        return;
+    }
+
+    try {
+        const response = await fetch('/api/scores', {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            alert(data.error || 'Failed to delete score');
+            return;
+        }
+
+        alert('Je score is verwijderd!');
+        loadLeaderboard(1); // Reload leaderboard
+
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Connection error');
+    }
 }
 
 const savedTheme = localStorage.getItem("theme");
