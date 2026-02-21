@@ -11,7 +11,7 @@
   "devDependencies": {},
   "scripts": {
     "start": "node server.js",
-    "build": "echo 'No build needed for static pages'",
+    "build": "echo 'Static build'",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": ["flashcards", "quiz", "leaderboard"],
