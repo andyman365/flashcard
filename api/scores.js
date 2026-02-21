@@ -20,6 +20,15 @@ export default async function handler(req, res) {
         return;
     }
 
+    // Check if MongoDB URI is set
+    if (!mongoUrl) {
+        console.error('❌ MONGODB_URI environment variable not set');
+        return res.status(500).json({ 
+            error: 'Database connection not configured',
+            details: 'MONGODB_URI environment variable is missing'
+        });
+    }
+
     try {
         const db = await connectDB();
         const scoresCollection = db.collection('scores');
