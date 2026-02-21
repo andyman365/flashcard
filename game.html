@@ -394,8 +394,8 @@ body.dark .coming-soon {
     <div class="score-display">
         <div class="score-label">🎯 Jouw Score</div>
         <div class="score-value">
-            <span id="score">0</span>
-            <span>punten</span>
+            <span id="score">⏳ Loading score</span>
+            <span id="pointsLabel" style="display: none;">punten</span>
         </div>
         <div class="score-subtitle">
             <span id="rankDisplay" style="display: none;">Ranking: #<span id="userRank">-</span></span>
@@ -591,11 +591,21 @@ async function loadUserScore() {
             if (userScore) {
                 score = userScore.score;
                 document.getElementById("score").innerText = score;
+                document.getElementById("pointsLabel").style.display = "inline";
                 console.log(`Loaded score from DB: ${score}`);
+            } else {
+                // User has no score yet
+                score = 0;
+                document.getElementById("score").innerText = "0";
+                document.getElementById("pointsLabel").style.display = "inline";
             }
         }
     } catch (error) {
         console.error('Error loading user score:', error);
+        // Default to 0 on error
+        score = 0;
+        document.getElementById("score").innerText = "0";
+        document.getElementById("pointsLabel").style.display = "inline";
     }
 }
 
