@@ -1,381 +1,57 @@
 <!DOCTYPE html>
-<html lang="nl">
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Flashcards</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
-
-<style>
-/* ---------- VARIABELEN ---------- */
-:root {
-    --bg: #f6f7fb;
-    --card: #ffffff;
-    --header: #ffcc66;
-    --text: #1f2937;
-    --button: #2563eb;
-    --button-text: white;
-    --card-back: #e8f4ff;
-}
-
-body.dark {
-    --bg: #1c1d22;
-    --card: #2a2c33;
-    --header: #ffb84d;
-    --text: #f2f2f2;
-    --button: #3b82f6;
-    --button-text: white;
-    --card-back: #3a3d46;
-}
-
-/* ---------- BODY ---------- */
-body {
-    margin: 0;
-    font-family: 'Nunito', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    transition: 0.3s;
-}
-
-/* ---------- HEADER ---------- */
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: var(--header);
-    padding: 15px 20px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-}
-
-.header-left {
-    font-size: 22px;
-    font-weight: 700;
-}
-
-.header-center {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-}
-
-.header-right button {
-    font-size: 18px;
-    padding: 6px 14px;
-    border-radius: 12px;
-    border: none;
-    cursor: pointer;
-    background: rgba(255,255,255,0.4);
-    transition: 0.2s;
-}
-.header-right button:hover { filter: brightness(0.9); }
-
-/* Flashcard knop */
-.flashcard-btn {
-    font-size: 18px;
-    padding: 12px 28px;
-    border-radius: 16px;
-    border: none;
-    background: var(--button);
-    color: var(--button-text);
-    cursor: pointer;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    transition: 0.2s;
-}
-.flashcard-btn:hover {
-    filter: brightness(0.9);
-    transform: translateY(-2px);
-}
-
-/* ---------- FILTERS ---------- */
-.filters {
-    display: flex;
-    justify-content: center;
-    margin: 15px 0;
-    gap: 20px;
-    flex-wrap: wrap;
-    font-size: 16px;
-    color: var(--text);
-}
-.filters input[type="checkbox"] {
-    margin-right: 6px;
-    transform: scale(1.2);
-    cursor: pointer;
-}
-.filters label:hover {
-    color: var(--button);
-    transition: 0.2s;
-}
-
-/* ---------- MAIN ---------- */
-.main {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-}
-
-/* ---------- FLASHCARD ---------- */
-.card {
-    width: 420px;
-    height: 260px;
-    perspective: 1000px;
-    cursor: pointer;
-}
-.card-inner {
-    width: 100%;
-    height: 100%;
-    position: relative;
-    transition: transform 0.7s;
-    transform-style: preserve-3d;
-}
-.card.flip .card-inner {
-    transform: rotateY(180deg);
-}
-.card-face {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    border-radius: 20px;
-    padding: 35px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    font-size: 28px;
-    backface-visibility: hidden;
-    background: var(--card);
-    box-shadow: 0 12px 30px rgba(0,0,0,0.25);
-}
-.card-back {
-    transform: rotateY(180deg);
-    background: var(--card-back);
-}
-
-/* ---------- FOOTER ---------- */
-.footer {
-    background: var(--card);
-    padding: 25px;
-    display: flex;
-    justify-content: center;
-    box-shadow: 0 -4px 15px rgba(0,0,0,0.15);
-}
-.next-btn {
-    padding: 18px 50px;
-    font-size: 20px;
-    border: none;
-    border-radius: 14px;
-    background: var(--button);
-    color: var(--button-text);
-    cursor: pointer;
-    transition: 0.2s;
-}
-.next-btn:hover {
-    filter: brightness(0.9);
-    transform: scale(1.05);
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Site Moved</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: #f4f6f9;
+      color: #1f2328;
+    }
+    .container {
+      text-align: center;
+      padding: 2.5rem;
+      max-width: 480px;
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    }
+    h1 {
+      font-size: 1.75rem;
+      margin-bottom: 1rem;
+      color: #24292f;
+    }
+    p {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      color: #4d4d4d;
+      margin-bottom: 1.5rem;
+    }
+    a {
+      display: inline-block;
+      padding: 0.65rem 1.5rem;
+      background-color: #2563eb;
+      color: #ffffff;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: 500;
+      transition: background-color 0.2s;
+    }
+    a:hover { background-color: #1d4ed8; }
+  </style>
 </head>
 <body>
-
-<div class="header">
-    <div class="header-left">📚 Woorden oefenen</div>
-    <div class="header-center">
-        <button class="flashcard-btn" onclick="goToQuiz()">📝 Ga naar Toetsmodus</button>
-    </div>
-    <div class="header-right">
-        <button class="toggle" onclick="toggleTheme()">🌙 / ☀️</button>
-        <button class="toggle" onclick="logout()" style="background: #dc2626;">Logout</button>
-    </div>
-</div>
-
-<!-- FILTERS -->
-<div class="filters">
-    <label><input type="checkbox" id="alle" checked> Alle</label>
-    <label><input type="checkbox" class="deel" value="1"> Deel 1</label>
-    <label><input type="checkbox" class="deel" value="2"> Deel 2</label>
-    <label><input type="checkbox" class="deel" value="3"> Deel 3</label>
-</div>
-
-<div class="main">
-    <div class="card" onclick="flipCard()" id="card">
-        <div class="card-inner">
-            <div class="card-face" id="front"></div>
-            <div class="card-face card-back" id="back"></div>
-        </div>
-    </div>
-</div>
-
-<div class="footer">
-    <button class="next-btn" onclick="nextCard()">Volgende kaart →</button>
-</div>
-
-<script>
-/* ---------- FLASHCARDS ---------- */
-const flashcards = [
-    // DEEL 1
-    { begrip: "Grondwet", betekenis: "Het belangrijkste wetboek van een land, waarin de rechten van burgers en de spelregels voor de overheid staan.", deel: 1 },
-    { begrip: "Trias politica", betekenis: "Scheiding der machten: wetgevende, uitvoerende en rechtsprekende macht zijn gescheiden om machtsmisbruik te voorkomen.", deel: 1 },
-    { begrip: "Kabinet", betekenis: "Alle ministers en staatssecretarissen samen; zij voeren het regeringsbeleid uit.", deel: 1 },
-    { begrip: "Minister-president", betekenis: "De leider van het kabinet en 'voorzitter' van de ministerraad, ook wel premier genoemd.", deel: 1 },
-    { begrip: "Ministerraad", betekenis: "Vergadering van alle ministers onder leiding van de premier; hier worden belangrijke besluiten genomen.", deel: 1 },
-    { begrip: "Demissionair kabinet", betekenis: "Een kabinet dat na een val van de regering of verkiezingen alléén lopende zaken afhandelt.", deel: 1 },
-    { begrip: "Tweede Kamer", betekenis: "Volksvertegenwoordiging gekozen door burgers (direct); heeft recht om wetten te maken en de regering te controleren.", deel: 1 },
-    { begrip: "Eerste Kamer", betekenis: "Kamer van 'heroverweging'; beoordeelt wetten op uitvoerbaarheid en rechtmatigheid, maar mag geen wetsvoorstellen indienen.", deel: 1 },
-    { begrip: "Staten-Generaal", betekenis: "Gezamenlijke naam voor de Eerste en Tweede Kamer.", deel: 1 },
-    { begrip: "Fractie", betekenis: "Alle Kamerleden van dezelfde politieke partij samen.", deel: 1 },
-    { begrip: "Fractiediscipline", betekenis: "Afspraken binnen een fractie om hetzelfde stemgedrag te vertonen.", deel: 1 },
-    { begrip: "Coalitie", betekenis: "Samenwerking van meerdere partijen om een regering te vormen.", deel: 1 },
-    { begrip: "Oppositie", betekenis: "Partijen die niet meeregeren, maar de regering kritisch volgen.", deel: 1 },
-    { begrip: "Regeerakkoord", betekenis: "Het contract met plannen en afspraken van partijen die samen een kabinet vormen.", deel: 1 },
-    { begrip: "Rijksbegroting", betekenis: "Overzicht van inkomsten en uitgaven van de overheid voor het komende jaar.", deel: 1 },
-    { begrip: "Algemene Beschouwingen", betekenis: "Groot politiek debat over de plannen van het kabinet, na Prinsjesdag.", deel: 1 },
-    { begrip: "Motie van wantrouwen", betekenis: "Uitspraak van de Tweede Kamer dat zij een minister of het kabinet niet meer vertrouwt.", deel: 1 },
-    { begrip: "Motie van treurnis", betekenis: "Kritische uitspraak van onvrede, minder zwaar dan een motie van wantrouwen.", deel: 1 },
-    { begrip: "Parlementaire enquête", betekenis: "Groot onderzoek door de Tweede Kamer naar het functioneren van bestuur of beleid.", deel: 1 },
-    { begrip: "Miljoenennota", betekenis: "Toelichting bij de Rijksbegroting, gepresenteerd op Prinsjesdag.", deel: 1 },
-    { begrip: "Prinsjesdag", betekenis: "Jaarlijks moment waarop de koning de troonrede voorleest en de begroting wordt aangeboden. Altijd op de derde dinsdag van september.", deel: 1 },
-    { begrip: "Raad van State", betekenis: "Adviesorgaan over wetsvoorstellen en hoogste bestuursrechter in Nederland.", deel: 1 },
-    { begrip: "Provinciale Staten", betekenis: "Provinciale volksvertegenwoordiging, kiest onder andere de Eerste Kamer (kiezer kiest 1e Kamer indirect).", deel: 1 },
-    { begrip: "Gemeenteraad", betekenis: "Het lokale volksvertegenwoordigend orgaan van een gemeente.", deel: 1 },
-    { begrip: "College van B&W", betekenis: "Het dagelijks bestuur van de gemeente (burgemeester en wethouders).", deel: 1 },
-    { begrip: "Stakeholder", betekenis: "Iemand of een groep die belang heeft bij een bepaalde beslissing, ontwikkeling of verandering, zoals burgers, bedrijven, de overheid of maatschappelijke organisaties.", deel: 2 },
-
-{ begrip: "Belang", betekenis: "Het voordeel of nadeel dat iemand ervaart bij een besluit of ontwikkeling. Dit kan financieel, sociaal, cultureel of moreel zijn.", deel: 2 },
-
-{ begrip: "Macht", betekenis: "Het vermogen van een persoon of groep om invloed uit te oefenen op anderen en zo besluiten of gedragingen te sturen.", deel: 2 },
-
-{ begrip: "Machtsmiddel", betekenis: "Een hulpmiddel waarmee iemand macht kan uitoefenen, zoals geld, kennis, een functie of toegang tot de media.", deel: 2 },
-
-{ begrip: "Invloed", betekenis: "De mogelijkheid om de mening of het gedrag van anderen te veranderen, ook zonder formele macht.", deel: 2 },
-
-{ begrip: "Lobby", betekenis: "Het (vaak achter de schermen) proberen politici en bestuurders te overtuigen van een standpunt, bijvoorbeeld door bedrijven of belangengroepen.", deel: 2 },
-
-{ begrip: "Belangengroep", betekenis: "Een georganiseerde groep die opkomt voor de belangen van een specifieke groep mensen, zoals vakbonden of consumentenorganisaties.", deel: 2 },
-
-{ begrip: "Pressiegroep", betekenis: "Een groep die actief druk uitoefent op politici of bestuurders om iets te veranderen, bijvoorbeeld door acties of campagnes.", deel: 2 },
-
-{ begrip: "Media", betekenis: "Krant, televisie, radio en sociale media die informatie verspreiden en zo de mening van het publiek kunnen beïnvloeden.", deel: 2 },
-
-{ begrip: "Opiniepeiling", betekenis: "Een onderzoek waarbij wordt gevraagd wat mensen ergens van vinden, bijvoorbeeld over een politieke partij of maatregel.", deel: 2 },
-
-{ begrip: "Protest", betekenis: "Een manier om actief te laten zien dat je het oneens bent met een besluit of situatie, bijvoorbeeld door een actie of manifestatie.", deel: 2 },
-
-{ begrip: "Demonstratie", betekenis: "Een bijeenkomst van mensen die samen in het openbaar protesteren om aandacht te vragen voor een onderwerp.", deel: 2 },
-
-{ begrip: "Petitie", betekenis: "Een schriftelijk verzoek van burgers aan de overheid of politiek, vaak met handtekeningen, om iets te veranderen.", deel: 2 },
-
-{ begrip: "Referendum", betekenis: "Een volksstemming waarin burgers zich direct uitspreken over een politieke kwestie of wetsvoorstel.", deel: 2 },
-
-{ begrip: "Actiegroep", betekenis: "Een tijdelijke groep burgers die zich inzet voor één specifiek doel, vaak met acties zoals flyers, campagnes of bijeenkomsten.", deel: 2 },
-
-{ begrip: "Belangenconflict", betekenis: "Een situatie waarin de belangen van verschillende personen of groepen botsen, bijvoorbeeld werknemers versus werkgevers.", deel: 2 },
-
-{ begrip: "Compromis", betekenis: "Een oplossing waarbij alle betrokken partijen een deel van hun wensen opgeven om samen tot een akkoord te komen.", deel: 2 },
-
-{ begrip: "Akkoord", betekenis: "Een officiële afspraak tussen partijen over een bepaald onderwerp, zoals een regeerakkoord of klimaatakkoord.", deel: 2 },
-
-{ begrip: "Onderhandeling", betekenis: "Een gesprek waarbij partijen met verschillende belangen proberen een gezamenlijke oplossing te vinden.", deel: 2 },
-
-{ begrip: "Wetgeving", betekenis: "Het geheel van wetten dat door de regering en het parlement wordt gemaakt en ingevoerd.", deel: 2 },
-
-{ begrip: "Beleid", betekenis: "Een plan of strategie van de overheid waarmee wordt geprobeerd bepaalde doelen te bereiken, bijvoorbeeld op het gebied van zorg of onderwijs.", deel: 2 },
-
-{ begrip: "Besluitvorming", betekenis: "Het proces waarin keuzes worden gemaakt door politici of bestuurders, vaak na overleg en debat.", deel: 2 },
-
-{ begrip: "Status quo", betekenis: "De huidige situatie die vaak lastig te veranderen is omdat veel partijen er belang bij hebben dat die blijft zoals hij is.", deel: 2 },
-
-{ begrip: "Publieke opinie", betekenis: "De heersende mening van (een groot deel van) de bevolking over een bepaald onderwerp of thema.", deel: 2 },
-
-{ begrip: "Veranderingstraject", betekenis: "Het hele proces waarin een idee uitgroeit tot een besluit en vervolgens wordt uitgevoerd, met alle stappen en obstakels die daarbij horen.", deel: 2 },
-    // DEEL 2 enz. kan je later toevoegen met dezelfde structuur, deel:2
-    
-];
-
-let currentIndex = -1;
-
-/* ---------- FUNCTIES ---------- */
-const front = document.getElementById("front");
-const back = document.getElementById("back");
-const cardElement = document.getElementById("card");
-
-// Filters
-const alle = document.getElementById("alle");
-const delen = document.querySelectorAll(".deel");
-
-alle.addEventListener("change", () => {
-    if(alle.checked){
-        delen.forEach(d => d.checked = false);
-    }
-    currentIndex = -1;
-});
-delen.forEach(d => {
-    d.addEventListener("change", () => {
-        if(d.checked){ alle.checked = false; }
-        currentIndex = -1;
-    });
-});
-
-function randomIndex() {
-    // filter flashcards op geselecteerde delen
-    let selected = [];
-    if(alle.checked) selected = flashcards;
-    else selected = flashcards.filter(fc => {
-        return Array.from(delen).some(d => d.checked && fc.deel == d.value);
-    });
-    if(selected.length === 0) return -1;
-    
-    let newIndex;
-    do {
-        newIndex = Math.floor(Math.random() * selected.length);
-    } while (newIndex === currentIndex && selected.length > 1);
-    currentIndex = newIndex;
-    return selected[newIndex];
-}
-
-function showCard() {
-    const card = randomIndex();
-    if(!card) {
-        front.textContent = "Selecteer minstens één deel!";
-        back.textContent = "";
-        return;
-    }
-    front.textContent = card.begrip;
-    back.textContent = card.betekenis;
-    cardElement.classList.remove("flip");
-}
-
-function nextCard() { showCard(); }
-function flipCard() { cardElement.classList.toggle("flip"); }
-
-/* ---------- THEMA ---------- */
-function toggleTheme(){
-    document.body.classList.toggle("dark");
-    localStorage.setItem("theme", document.body.classList.contains("dark") ? "dark" : "light");
-}
-if(localStorage.getItem("theme")==="dark"){ document.body.classList.add("dark"); }
-
-/* ---------- NAVIGATIE ---------- */
-function goToQuiz(){ window.location.href = "game.html"; }
-function logout() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('username');
-    window.location.href = 'login.html';
-}
-
-/* ---------- START ---------- */
-// Check authentication
-const token = localStorage.getItem('token');
-const username = localStorage.getItem('username');
-
-if (!token || !username) {
-    window.location.href = 'login.html';
-} else {
-    showCard();
-}
-</script>
+  <div class="container">
+    <h1>This site has moved</h1>
+    <p>The flashcards app now lives at a new location.</p>
+    <a href="https://flashcards-six-ochre.vercel.app/">Visit the new site &rarr;</a>
+  </div>
 </body>
 </html>
